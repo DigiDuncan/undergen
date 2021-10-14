@@ -37,4 +37,4 @@ def get_image(character: "Character", expression: str, text: str, animated: bool
     if response.status_code != 200:
         raise RuntimeError(f"Box generator responded with code {response.status_code}.")
 
-    return response.content
+    return params["format"], response.content

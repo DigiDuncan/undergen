@@ -11,8 +11,8 @@ db = CharacterDB([
 def main():
     name = str(round(time.time()))
     ralsei = db.get("ralsei")
-    image, sound = ralsei.get_image_and_sound("smile-blush", "Thank you for making me your test!")
-    with open(f"./test_images/{name}.gif", "wb") as f:
+    filetype, image, sound = ralsei.get_image_and_sound("smile-blush", "Thank you for making me your test!")
+    with open(f"./test_images/{name}.{filetype}", "wb") as f:
         f.write(image)
     with open(f"./test_images/{name}.wav", "wb") as f:
         f.write(sound)

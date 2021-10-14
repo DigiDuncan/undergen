@@ -33,7 +33,7 @@ class Character:
         return get_sound_ext(self, text)
 
     def get_image_and_sound(self, expression: str, text: str, animated: bool = True):
-        return self.get_image(expression, text, animated), self.get_sound(text)
+        return *self.get_image(expression, text, animated), self.get_sound(text)
 
     def to_json(self):
         return {
