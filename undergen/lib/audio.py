@@ -26,6 +26,8 @@ def get_sound(character: "Character", text: str):
     character_name = character.sound_name
     emotion = "Normal"
 
+    print(f"Getting audio for {character_name} '{text}'...")
+
     response = requests.post(url, json = {
         "character": character_name,
         "emotion": emotion,
@@ -42,5 +44,7 @@ def get_sound(character: "Character", text: str):
 
     if second_response.status_code != 200:
         raise RuntimeError(f"15.ai CDN responded with code {second_response.status_code}.")
+
+    print("Audio success!")
 
     return second_response.content

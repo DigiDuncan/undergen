@@ -1,6 +1,8 @@
+import io
 from typing import TYPE_CHECKING
 
 import requests
+from PIL import Image
 
 if TYPE_CHECKING:
     from undergen.lib.data import Character
@@ -11,10 +13,7 @@ url_template = "https://www.demirramon.com/gen/undertale_text_box.{format}?text=
 def get_image(character: "Character", expression: str, text: str, animated: bool = True):
     params = {}
 
-    # Validation
-    if character.valid_expressions:
-        if expression not in character.valid_expressions:
-            raise ValueError(f"'{expression}' not a valid expresion for {character.name}.")
+    print(f"Getting image for {character.name}:{expression} '{text}'...")
 
     # Animated?
     if animated:
@@ -37,4 +36,28 @@ def get_image(character: "Character", expression: str, text: str, animated: bool
     if response.status_code != 200:
         raise RuntimeError(f"Box generator responded with code {response.status_code}.")
 
+    print("Image success!")
+
     return params["format"], response.content
+
+
+def merge_gifs(gifs: list[bytes], path: str, loop = False):
+    loop_num = 0 if loop else 1
+    print("Loading GIFs for merging...")
+    gifs: list[Image.Image] = [Image.open(io.BytesIO(b)) for b in gifs]
+
+    # Get durations
+    durations = []
+    for gif in gifs:
+        if gif.is_animated:
+            for i in range(0, gif.n_frames):
+                gif.seek(i)
+                durations.append(gif.info["duration"])
+        else:
+            raise ValueError("Got non-animated GIF!")
+
+    print("Merge success!")
+    image = gifs.pop(0)
+
+    print("Writing merged GIF...")
+    image.save(path, save_all = True, append_images = gifs, duration = durations, loop = loop_num)
